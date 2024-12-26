@@ -4,7 +4,6 @@ const functionSchema = new Schema({
     functionName: {
         type: String,
         required: true,
-        unique: true
     },
     functionRate: {
         type: Number,
@@ -16,7 +15,6 @@ const articleSchema = new Schema({
     articleName: {
         type: String,
         required: true,
-        unique: true
     },
     stitchingRate: [functionSchema]
 });

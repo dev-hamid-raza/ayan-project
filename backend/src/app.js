@@ -19,8 +19,10 @@ app.use(cookieParser());
 
 // routes import
 import partyRouter from './routes/party.routes.js';
+import poRouter from './routes/po.routes.js'
 
 app.use('/api/v1/party', partyRouter);
+app.use('/api/v1/po', poRouter);
 
 
 export {app}
