@@ -6,8 +6,20 @@ import {Party} from "../models/party.model.js";
 
 const createParty = asyncHandler(async (req, res) => {
     const partyName = req.body.partyName;
-    const party = await Party.create({partyName});
-    res.status(201).json(new ApiResponse(201, party));
+    if(!partyName) {
+        throw new ApiError(400,'Party name is required')
+    }
+    const existingPartyName = await Party.findOne({partyName})
+    if(existingPartyName) {
+        throw new ApiError(400,'Party name already exits')
+    }
+    const newPartyName = await Party.create({partyName})
+    if(!newPartyName) {
+        throw new ApiError(500,'Something went wrong try again later')
+    }
+    return res
+            .status(200)
+            .json(new ApiResponse(201,newPartyName))
 });
 
 
