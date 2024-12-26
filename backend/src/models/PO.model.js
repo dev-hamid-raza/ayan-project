@@ -1,12 +1,12 @@
 import mongoose, {Schema} from "mongoose";
 
-const POSchema = new Schema({
+const poSchema = new Schema({
     poNumber: {
         type: String,
         required: true,
         unique: true
     },
-    party: {
+    partyName: {
         type: Schema.Types.ObjectId,
         ref: 'Party'
     },
@@ -17,4 +17,4 @@ const POSchema = new Schema({
 }, {timestamps: true});
 
 
-export const PO = mongoose.Model('PO', POSchema)
+export const PO = mongoose.Model('PO', poSchema)

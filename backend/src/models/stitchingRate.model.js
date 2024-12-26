@@ -26,7 +26,7 @@ const stitchingRateSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Party',
     },
-    PO: {
+    po: {
         type: Schema.Types.ObjectId,
         ref: 'PO'
     },
