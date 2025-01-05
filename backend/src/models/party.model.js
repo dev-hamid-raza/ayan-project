@@ -5,7 +5,7 @@ const partySchema = new Schema({
         type: String, 
         required: true, 
         unique: true },
-    PO: [
+    po: [
         { 
         type: Schema.Types.ObjectId, 
         ref: 'PO' 
