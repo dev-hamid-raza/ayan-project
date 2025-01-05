@@ -11,7 +11,10 @@ const poSchema = new Schema({
     stitchingRate: {
         type:Schema.Types.ObjectId,
         ref: 'StitchingRate'
-    }
+    },
+    articles: [{
+        type: String
+    }]
 }, {timestamps: true});
 
 

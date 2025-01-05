@@ -9,15 +9,15 @@ const functionSchema = new Schema({
         type: Number,
         required: true
     }
-})
+}, {timestamps: true})
 
 const articleSchema = new Schema({
     articleName: {
         type: String,
         required: true,
     },
-    stitchingRate: [functionSchema]
-});
+    functions: [functionSchema]
+}, {timestamps: true});
 
 const stitchingRateSchema = new Schema({
     partyName: {
@@ -28,7 +28,7 @@ const stitchingRateSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'PO'
     },
-    article: [articleSchema]
+    articles: [articleSchema]
 },{timestamps: true});
 
 export const StitchingRate = mongoose.model('StitchingRate', stitchingRateSchema);

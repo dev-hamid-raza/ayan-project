@@ -35,4 +35,29 @@ const createPo = asyncHandler(async (req, res) => {
                 .json(new ApiResponse(200,createdPo,'Po created successfully'))
 })
 
-export { createPo }
+const createArticle = asyncHandler(async (req, res) => {
+    const {article, poNumber} = req.body
+    if(!article) {
+        throw new ApiError(400,'Article name is required')
+    }
+    if(!poNumber) {
+        throw new ApiError(400,'PO Number is required')
+    }
+    const po = await PO.findOne({poNumber})
+    if(!po) {
+        throw new ApiError(404,'This PO is not exist')
+    }
+    if(po.articles.includes(article)) {
+        throw new ApiError(400, 'Article is already exists')
+    }
+    po.articles.push(article)
+    await po.save()
+    return res
+            .status(201)
+            .json(new ApiResponse(200, po.articles, 'Article successfully created'))
+})
+
+export { 
+    createPo,
+    createArticle
+}
