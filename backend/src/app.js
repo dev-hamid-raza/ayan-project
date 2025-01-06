@@ -10,7 +10,7 @@ app.use(cors({
 }
 ));
 
-app.use(express.json());
+app.use(express.json());     
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(cookieParser());
@@ -20,9 +20,11 @@ app.use(cookieParser());
 // routes import
 import partyRouter from './routes/party.routes.js';
 import poRouter from './routes/po.routes.js'
+import stitchingRateRouter from './routes/stitchingRate.routes.js'
 
 app.use('/api/v1/party', partyRouter);
 app.use('/api/v1/po', poRouter);
+app.use('/api/v1/stitching-rate', stitchingRateRouter);
 
 
 export {app}
