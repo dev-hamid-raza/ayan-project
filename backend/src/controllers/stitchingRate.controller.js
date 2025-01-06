@@ -21,7 +21,8 @@ const createStitchingRate = asyncHandler(async (req, res) => {
     if(!exitedPoNumber) {
         throw new ApiError(400, 'This po is not exits first create it')
     }
-    let stitchingRate = await StitchingRate.findOne({po:exitedPoNumber._id, partyName:exitedPartyName._id})
+    let stitchingRate = await StitchingRate.findOne({po:exitedPoNumber._id, partyName:exitedPartyName._id}).populate('po')
+    console.log(stitchingRate?.po)
     if(!stitchingRate) {
         stitchingRate = new StitchingRate({
             partyName: exitedPartyName._id,
@@ -29,6 +30,14 @@ const createStitchingRate = asyncHandler(async (req, res) => {
             articles: []
         })
     }
+    
+    stitchingRate.po.articles.forEach(article => {
+        const newArticle = {
+            articleName : article,
+            functions: []
+        }
+        stitchingRate.articles.push(newArticle)
+    });
     await stitchingRate.save()
     return res 
             .status(200)
