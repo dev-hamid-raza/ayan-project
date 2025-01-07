@@ -30,7 +30,6 @@ const createStitchingRate = asyncHandler(async (req, res) => {
             articles: []
         })
     }
-    
     stitchingRate.po.articles.forEach(article => {
         const newArticle = {
             articleName : article,
@@ -41,7 +40,41 @@ const createStitchingRate = asyncHandler(async (req, res) => {
     await stitchingRate.save()
     return res 
             .status(200)
-            .json(new ApiResponse(200,stitchingRate))
+            .json(new ApiResponse(200,stitchingRate,))
 })
 
-export { createStitchingRate }
+const addFunctionToStitchingRate = asyncHandler(async (req, res) => {
+    const {article, functionName, functionRate} = req.body
+    const {stitchingRateId} = req.params
+    console.log(stitchingRateId)
+    if(!article) {
+        throw new ApiError(400, 'Article is required')
+    }
+    if(!functionName) {
+        throw new ApiError(400, 'Function Name is required')
+    }
+    if(!functionRate) {
+        throw new ApiError(400, 'Rate is required')
+    }
+    const existingStitchingRate = await StitchingRate.findById(stitchingRateId)
+    if(!existingStitchingRate) {
+        throw new ApiError(404, 'Something went wrong')
+    }
+    console.log(article)
+    const foundArticle = existingStitchingRate.articles.find((a) => {
+        return a.articleName.toLowerCase() === article.toLowerCase()
+    })
+    if(!foundArticle) {
+        throw new ApiError('404', 'Article is not found')
+    }
+    foundArticle.functions.push({functionName,functionRate})
+    existingStitchingRate.save()
+    return res
+            .status(201)
+            .json(new ApiResponse(200,existingStitchingRate,'Successfully function added'))
+})
+
+export { 
+    createStitchingRate,
+    addFunctionToStitchingRate
+}
