@@ -21,8 +21,7 @@ const createStitchingRate = asyncHandler(async (req, res) => {
     if(!exitedPoNumber) {
         throw new ApiError(400, 'This po is not exits first create it')
     }
-    let stitchingRate = await StitchingRate.findOne({po:exitedPoNumber._id, partyName:exitedPartyName._id}).populate('po')
-    console.log(stitchingRate?.po)
+    let stitchingRate = await StitchingRate.findOne({po:exitedPoNumber._id, partyName:exitedPartyName._id})
     if(!stitchingRate) {
         stitchingRate = new StitchingRate({
             partyName: exitedPartyName._id,
@@ -30,17 +29,37 @@ const createStitchingRate = asyncHandler(async (req, res) => {
             articles: []
         })
     }
-    stitchingRate.po.articles.forEach(article => {
-        const newArticle = {
-            articleName : article,
-            functions: []
-        }
-        stitchingRate.articles.push(newArticle)
-    });
     await stitchingRate.save()
     return res 
             .status(200)
             .json(new ApiResponse(200,stitchingRate,))
+})
+
+const addArticleToStitchingRate = asyncHandler(async (req, res) => {
+    const {article} = req.body
+    const {stitchingRateId} = req.params
+    if(!article) {
+        throw new ApiError(400, 'Article is required')
+    }
+    const existingStitchingRate = await StitchingRate.findById(stitchingRateId)
+    if(!existingStitchingRate) {
+        throw new ApiError(404, 'Something went wrong')
+    }
+    const foundArticle = existingStitchingRate.articles.find((a) => {
+        return a.articleName.toLowerCase() === article.toLowerCase()
+    })
+    if(foundArticle) {
+        throw new ApiError('400', 'Article already exists')
+    }
+    const newArticle = {
+        articleName: article,
+        functions: []
+    }
+    existingStitchingRate.articles.push(newArticle)
+    await existingStitchingRate.save()
+    return res
+            .status(201)
+            .json(new ApiResponse(200,existingStitchingRate,'Successfully added new article'))
 })
 
 const addFunctionToStitchingRate = asyncHandler(async (req, res) => {
@@ -76,5 +95,6 @@ const addFunctionToStitchingRate = asyncHandler(async (req, res) => {
 
 export { 
     createStitchingRate,
+    addArticleToStitchingRate,
     addFunctionToStitchingRate
 }
