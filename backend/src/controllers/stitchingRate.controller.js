@@ -86,6 +86,10 @@ const addFunctionToStitchingRate = asyncHandler(async (req, res) => {
     if(!foundArticle) {
         throw new ApiError('404', 'Article is not found')
     }
+    const foundFunction = foundArticle.functions.find((a) => a.functionName.toLowerCase() === functionName.toLowerCase())
+    if(foundFunction) {
+        throw new ApiError(400, 'This function already exists')
+    }
     foundArticle.functions.push({functionName,functionRate})
     existingStitchingRate.save()
     return res
