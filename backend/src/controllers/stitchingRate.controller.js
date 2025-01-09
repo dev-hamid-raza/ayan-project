@@ -97,6 +97,11 @@ const addFunctionToStitchingRate = asyncHandler(async (req, res) => {
             .json(new ApiResponse(200,existingStitchingRate,'Successfully function added'))
 })
 
+const updateArticleName = asyncHandler(async (req, res) => {
+    const {newArticleName} = req.body
+    const {articleId}
+})
+
 export { 
     createStitchingRate,
     addArticleToStitchingRate,
